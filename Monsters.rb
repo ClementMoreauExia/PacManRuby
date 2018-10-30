@@ -2,17 +2,17 @@ class Monsters
   def initialize window
     @window = window
     @RedMonster = Gosu::Image.new(@window,"media/Red.png")
-    @xRed = 265
-    @yRed = 345
+    @xRed = 256
+    @yRed = 320
     @BlueMonster = Gosu::Image.new @window, "media/Blue.png"
-    @xBlue = 300
-    @yBlue = 345
+    @xBlue = 288
+    @yBlue = 320
     @OrangeMonster = Gosu::Image.new @window, "media/Orange.png"
-    @xOrange = 335
-    @yOrange = 345
+    @xOrange = 320
+    @yOrange = 320
     @PinkMonster = Gosu::Image.new @window, "media/Pink.png"
-    @xPink = 370
-    @yPink = 345
+    @xPink = 352
+    @yPink = 320
     @DeadMonster = Gosu::Image.new @window, "media/Dead.png"
   end
 
