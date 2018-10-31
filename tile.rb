@@ -16,8 +16,8 @@ class Tile
     @img.draw(@x,@y,0)
   end
 
-  def collides?
-    return @rectangle.collides?(rect )
+  def collides?(rect)
+    return @rectangle.collides?(rect)
   end
 
 end

@@ -13,11 +13,16 @@ class PacManGame < Gosu::Window
     @map = Map.new("map/mapOpen.map")
     # @background_image = Gosu::Image.new("media/mapOpen.png", :tileable => true)
     @pacManPlayer = PacManPlayer.new self
-    @Monsters = Monsters.new self
+    @redMonster = Monsters.new(self,"red",256,320)
+    @blueMonster = Monsters.new(self,"blue",288,320)
+    @orangeMonster = Monsters.new(self,"orange",320,320)
+    @pinkMonster = Monsters.new(self,"pink",352,320)
+
   end
 
   def update
-    @pacManPlayer.update()
+    @pacManPlayer.update(@map.tiles)
+    @blueMonster.update(@map.tiles)
 
   end
 
@@ -25,7 +30,10 @@ class PacManGame < Gosu::Window
     # @background_image.draw(0,0,0)
     @map.draw
     @pacManPlayer.draw
-    @Monsters.draw
+    @redMonster.draw
+    @blueMonster.draw
+    @orangeMonster.draw
+    @pinkMonster.draw
   end
 end
 PacManGame.new.show
