@@ -2,9 +2,9 @@ class PacManPlayer
   def initialize window
     @window = window
     @image = Gosu::Image.new @window, "media/pacManLeft.png"
-    @xpac = @window.width/2 - @image.width/2
+    @xpac = 320
     @ypac = 384
-    @move = 'null'
+    @move = nil
     @xmove = 0
     @ymove = 0
 
@@ -17,9 +17,11 @@ class PacManPlayer
     @left_rectangle = Rectangle.new(0, 0,5, @image.height-10)
     @up_rectangle = Rectangle.new(0, 0, @image.height-10, 5)
     @down_rectangle = Rectangle.new(0, 0, @image.height-10, 5)
+
+    @score = 0
   end
 
-  def update(tiles)
+  def update(map)
 
 
     if Gosu.button_down? Gosu::KB_LEFT or Gosu::button_down? Gosu::GP_LEFT and @move != 'left'
@@ -50,9 +52,17 @@ class PacManPlayer
     @xpac += @xmove
     @ypac += @ymove
 
+
     synchronize_rectangles()
-    tiles.each do |tile|
+    @tileNumber = 0
+    map.tiles.each do |tile|
+
+      if tile == nil
+        @tileNumber += 1
+      end
+
       next if tile == nil
+      if tile.type == 1
         if tile.collides?(@right_rectangle) and @move == 'right'
           @xmove = 0
           @ymove = 0
@@ -77,6 +87,20 @@ class PacManPlayer
           @ymove = 0
           synchronize_rectangles()
         end
+      end
+      if tile.type == 2
+        if ((tile.collides?(@right_rectangle) and@move == 'right') or
+          (tile.collides?(@left_rectangle) and @move == 'left' )  or
+          (tile.collides?(@up_rectangle) and @move == 'up') or
+          (tile.collides?(@down_rectangle) and @move == 'down'))
+
+          map.tiles[@tileNumber] = nil
+          puts @tileNumber
+
+
+        end
+      end
+      @tileNumber += 1
     end
 
 

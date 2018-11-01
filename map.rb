@@ -15,8 +15,8 @@ class Map
       args.each do |arg|
         if arg.to_i == 0
           @tiles << nil
-        elsif arg.to_i == 1
-          @tiles << Tile.new(x,y)
+        else
+          @tiles << Tile.new(x,y,arg.to_i)
         end
         x+=32
       end
@@ -30,5 +30,10 @@ class Map
       tile.draw if tile != nil
     end
   end
+
+  def update
+
+  end
+
 
 end

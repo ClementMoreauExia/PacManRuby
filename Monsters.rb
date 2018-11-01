@@ -29,10 +29,10 @@ class Monsters
 
   end
 
-  def update(tiles)
+  def update(map)
 
     synchronize_rectangles()
-    tiles.each do |tile|
+    map.tiles.each do |tile|
       next if tile == nil
         if tile.collides?(@right_rectangle)
 
