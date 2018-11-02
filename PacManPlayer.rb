@@ -1,4 +1,5 @@
 class PacManPlayer
+  attr_reader :endGameV
   def initialize window
     @window = window
     @image = Gosu::Image.new @window, "media/pacManLeft.png"
@@ -18,40 +19,38 @@ class PacManPlayer
     @up_rectangle = Rectangle.new(0, 0, @image.height-10, 5)
     @down_rectangle = Rectangle.new(0, 0, @image.height-10, 5)
 
-    @score = 0
+    @endGameV = false
   end
 
-  def update(map)
+  def update(map,score)
+    movement()
+    collidesPacMan(map,score)
+    endGame(map,score)
+  end
+
+  def draw
+    @image.draw(@xpac,@ypac,1)
 
 
-    if Gosu.button_down? Gosu::KB_LEFT or Gosu::button_down? Gosu::GP_LEFT and @move != 'left'
-      @image = Gosu::Image.new @window, "media/pacManLeft.png"
-      @move = 'left'
-      @xmove = -2
-      @ymove = 0
-    end
-    if Gosu.button_down? Gosu::KB_RIGHT or Gosu::button_down? Gosu::GP_RIGHT and @move != 'right'
-      @image = Gosu::Image.new @window, "media/pacManRight.png"
-      @move = 'right'
-      @xmove = 2
-      @ymove = 0
+  end
 
-    end
-    if Gosu.button_down? Gosu::KB_UP or Gosu::button_down? Gosu::GP_UP and @move != 'up'
-      @image = Gosu::Image.new @window, "media/pacManUp.png"
-      @move = 'up'
-      @xmove = 0
-      @ymove = -2
-    end
-    if Gosu.button_down? Gosu::KB_DOWN or Gosu::button_down? Gosu::GP_DOWN and @move != 'down'
-      @image = Gosu::Image.new @window, "media/pacManDown.png"
-      @move = 'down'
-      @xmove = 0
-      @ymove = 2
-    end
-    @xpac += @xmove
-    @ypac += @ymove
+  def endGame(map,score)
+    @nbCollectable = 0
+    map.tiles.each do |tile|
+      next if tile == nil
 
+        if tile.type != 1
+          @nbCollectable +=1
+        end
+    end
+    if @nbCollectable == 0 and @endGameV == false
+      puts "End"
+      @endGameV = true
+      score.saveScore
+    end
+  end
+
+  def collidesPacMan(map,score)
 
     synchronize_rectangles()
     @tileNumber = 0
@@ -89,31 +88,57 @@ class PacManPlayer
         end
       end
       if tile.type == 2
-        if ((tile.collides?(@right_rectangle) and@move == 'right') or
+        if ((tile.collides?(@right_rectangle) and @move == 'right') or
           (tile.collides?(@left_rectangle) and @move == 'left' )  or
           (tile.collides?(@up_rectangle) and @move == 'up') or
           (tile.collides?(@down_rectangle) and @move == 'down'))
 
           map.tiles[@tileNumber] = nil
-          puts @tileNumber
+          score.addPointScore
+        end
+      end
+      if tile.type == 3
+        if ((tile.collides?(@right_rectangle) and @move == 'right') or
+          (tile.collides?(@left_rectangle) and @move == 'left' )  or
+          (tile.collides?(@up_rectangle) and @move == 'up') or
+          (tile.collides?(@down_rectangle) and @move == 'down'))
 
+          map.tiles[@tileNumber] = nil
 
         end
       end
       @tileNumber += 1
     end
-
-
   end
 
-  def draw
-    @image.draw(@xpac,@ypac,1)
+  def movement
+    if Gosu.button_down? Gosu::KB_LEFT or Gosu::button_down? Gosu::GP_LEFT and @move != 'left'
+      @image = Gosu::Image.new @window, "media/pacManLeft.png"
+      @move = 'left'
+      @xmove = -2
+      @ymove = 0
+    end
+    if Gosu.button_down? Gosu::KB_RIGHT or Gosu::button_down? Gosu::GP_RIGHT and @move != 'right'
+      @image = Gosu::Image.new @window, "media/pacManRight.png"
+      @move = 'right'
+      @xmove = 2
+      @ymove = 0
 
-    # @right_rectangle.draw
-    # @left_rectangle.draw
-    # @up_rectangle.draw
-    # @down_rectangle.draw
-
+    end
+    if Gosu.button_down? Gosu::KB_UP or Gosu::button_down? Gosu::GP_UP and @move != 'up'
+      @image = Gosu::Image.new @window, "media/pacManUp.png"
+      @move = 'up'
+      @xmove = 0
+      @ymove = -2
+    end
+    if Gosu.button_down? Gosu::KB_DOWN or Gosu::button_down? Gosu::GP_DOWN and @move != 'down'
+      @image = Gosu::Image.new @window, "media/pacManDown.png"
+      @move = 'down'
+      @xmove = 0
+      @ymove = 2
+    end
+    @xpac += @xmove
+    @ypac += @ymove
   end
 
   def synchronize_rectangles
